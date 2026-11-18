@@ -56,5 +56,5 @@ pm2 start index
 ```
 
 > [!CAUTION]
-> **Este proyecto no esta afliado o tiene colaboracion alguna con WhatsApp, Inc. WhatsApp es una marca registrada de WhatsApp LLC, por lo que este bot es un desarrolado independiente y no tiene ninguna relacion con alguna compañia.
+> **Este proyecto no esta afliado o tiene colaboracion alguna con WhatsApp, Inc. WhatsApp es una marca registrada de WhatsApp LLC, por lo que este bot es un desarrollo independiente y no tiene ninguna relacion con alguna compañia.
 
