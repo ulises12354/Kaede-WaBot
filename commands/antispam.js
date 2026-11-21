@@ -1,32 +1,23 @@
-export default async (client, m) => {
-  if (!m.isGroup || !m.text) return
 
+  import db from '#db';
+
+export async function before({ msg, sock, groupMetadata, participants, isAdmins, isBotAdmins }) {
+  if (!msg.isGroup || !msg.text) return
   const MAX_CHARS = 15000
-
-  if (m.text.length < MAX_CHARS) return
-
-  const groupMetadata = await client.groupMetadata(m.chat).catch(() => null)
+  if (msg.text.length < MAX_CHARS) return
   if (!groupMetadata) return
-
-  const participants = groupMetadata.participants || []
-  const admins = participants
-    .filter(p => p.admin)
-    .map(p => p.phoneNumber || p.jid || p.id || p.lid)
-
-  const isAdmin = admins.includes(m.sender)
-  const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
-  const isBotAdmin = admins.includes(botId)
-  const isSelf = global.db.data.settings[botId]?.self ?? false
+  const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
+  const isSelf = db.getSettings(botId).self ?? false;
   if (isSelf) return
-  const chat = global?.db?.data?.chats?.[m.chat]
+  const chat = db.getChat(msg.chat)
   const primaryBotId = chat?.primaryBot
   const isPrimary = !primaryBotId || primaryBotId === botId
-  const userName = global.db.data.users[m.sender]?.name || m.pushName || 'Usuario'
+  const userName = db.getUser(msg.sender)?.name || msg.pushName || 'Usuario'
   
-  if (isAdmin || !isBotAdmin || !isPrimary) return
+  if (isAdmins || !isBotAdmins || !isPrimary) return
 
-  await client.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.key.id, participant: m.key.participant }})
+  await sock.sendMessage(msg.chat, { delete: { remoteJid: msg.chat, fromMe: false, id: msg.key.id, participant: msg.key.participant }})
   
-  await client.reply(m.chat, `> ꕥ se ha eliminado a *${userName}* del grupo por protección contra spam. [Mensaje demasiado largo].`, null)
-  await client.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
+  await sock.reply(msg.chat, `> ꕥ se ha eliminado a *${userName}* del grupo por protección contra spam. [Mensaje demasiado largo].`, null)
+  await sock.groupParticipantsUpdate(msg.chat, [msg.sender], 'remove')
 }
