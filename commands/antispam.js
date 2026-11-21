@@ -1,5 +1,4 @@
-
-  import db from '#db';
+import db from '#db';
 
 export async function before({ msg, sock, groupMetadata, participants, isAdmins, isBotAdmins }) {
   if (!msg.isGroup || !msg.text) return
