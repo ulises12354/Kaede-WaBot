@@ -7,10 +7,10 @@ export default {
     const defaultLang = 'es'
     if (!args[0] && !msg.quoted) return msg.reply('《✧》 Ingresa el idioma seguido del texto que quieras traducir.')
     let lang = args[0]
-    let text = args.slice(1).join(' ') || msg.quoted?.text
+    let text = args.slice(1).join(' ') || msg.quoted?.body
     if ((lang || '').length !== 2) {
       lang = defaultLang
-      text = args.join(' ') || msg.quoted?.text
+      text = args.join(' ') || msg.quoted?.body
     }
     try {
       await msg.react('🕒')
