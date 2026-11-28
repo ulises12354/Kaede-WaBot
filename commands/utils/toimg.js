@@ -67,6 +67,9 @@ export default {
     await msg.react('🕒');    
     try {
       const quoted = msg.quoted;
+      if (quoted?.msg?.viewOnce) {
+          return msg.reply('《✧》 No puedo convertir a imagen/gif las imágenes o videos `para ver una vez.`');
+      }
       const buffer = await quoted.download();      
       if (!buffer) {
         await msg.react('✖️');
